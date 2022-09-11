@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:lottie/lottie.dart';
-import 'package:prezent/modules/faculty/pages/class-detail/controller/class_detail_view_conroller.dart';
+import 'package:prezent/modules/faculty/controllers/class_detail_view_conroller.dart';
 import 'package:prezent/modules/faculty/pages/class-detail/widgets/time_slots_widget.dart';
 import './widgets/attendance_calender.dart';
 
@@ -12,8 +12,8 @@ class ClassDetailView extends StatelessWidget {
   final ClassSubjectIdModel classSubjectId;
   @override
   Widget build(BuildContext context) {
-    ClassDetailViewController controller = Get.put(ClassDetailViewController());
-    controller.classSubjectId = classSubjectId;
+    ClassDetailViewController controller = Get.put(ClassDetailViewController(classSubjectId));
+    
     ColorScheme colorScheme = Get.theme.colorScheme;
     return SafeArea(
       top: false,

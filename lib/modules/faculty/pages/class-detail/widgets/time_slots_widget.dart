@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:prezent/modules/faculty/pages/class-detail/controller/class_detail_view_conroller.dart';
+import 'package:prezent/modules/faculty/controllers/class_detail_view_conroller.dart';
 import 'package:prezent/modules/faculty/pages/class-detail/widgets/attendance_card.dart';
 
 import '../../../../../models/models.dart';

@@ -6,10 +6,19 @@ import 'package:prezent/models/models.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ClassDetailViewController extends GetxController {
-  bool isRecordAvailable = false;
-  late ClassSubjectIdModel classSubjectId;
+  
+  ClassDetailViewController(this.classSubjectId);
+  late bool isRecordAvailable;
+  final ClassSubjectIdModel classSubjectId;
   DateTime selectedDate = DateTime.now();
   bool isToday = true;
+
+  @override
+  void onInit() {
+    super.onInit();
+    isRecordAvailable = isWorkingDay(DateTime.now(), classSubjectId);
+  }
+
   List<DateTime> attendanceDates(ClassSubjectIdModel classSubjectId) {
     List<TimeWiseAttendanceModel> timeWiseAttendanceList = dummyListOfClassRoom
         .where((classRoom) => classRoom.classSubjectId == classSubjectId)

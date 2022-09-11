@@ -4,7 +4,7 @@ import 'package:prezent/modules/faculty/controllers/home_view_controller.dart';
 import 'package:prezent/modules/faculty/pages/add_new_faculty_class/add_new_faculty_class_view.dart';
 
 import '../../../../models/dummy_data.dart';
-import '../home/faculty_class_tile.dart';
+import 'widgets/faculty_class_tile.dart';
 
 class FacultyHomeView extends StatelessWidget {
   const FacultyHomeView({super.key});

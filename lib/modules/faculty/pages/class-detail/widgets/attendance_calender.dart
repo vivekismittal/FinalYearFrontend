@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezent/models/models.dart';
-import 'package:prezent/modules/faculty/pages/class-detail/controller/class_detail_view_conroller.dart';
+import 'package:prezent/modules/faculty/controllers/class_detail_view_conroller.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AttendanceCalender extends StatefulWidget {

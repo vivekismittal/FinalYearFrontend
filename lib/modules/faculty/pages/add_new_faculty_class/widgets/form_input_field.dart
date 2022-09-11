@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezent/models/dummy_data.dart';
@@ -150,6 +151,50 @@ class FormInputField extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+
+class InputSearchableDropDownField extends StatelessWidget {
+  const InputSearchableDropDownField({
+    Key? key,
+    required this.classIdController,
+    required this.items,
+    required this.label,
+    required this.hint,
+  }) : super(key: key);
+
+  final TextEditingController classIdController;
+  final List<String> items;
+  final String label;
+  final String hint;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownSearch<String>(
+      popupProps: const PopupProps.menu(
+        // constraints: BoxConstraints(maxHeight: double.infinity - 400),
+        scrollbarProps: ScrollbarProps(),
+        showSearchBox: true,
+        searchFieldProps: TextFieldProps(autofocus: true),
+        searchDelay: Duration(),
+      ),
+      items: items,
+      autoValidateMode: AutovalidateMode.onUserInteraction,
+      onChanged: (value) => classIdController.text = value!,
+      validator: (value) {
+        if ((value == null || value.isEmpty)) {
+          return '$label can\'t be empty';
+        }
+        return null;
+      },
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+        ),
+      ),
     );
   }
 }

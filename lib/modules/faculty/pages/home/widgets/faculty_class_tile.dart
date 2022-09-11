@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezent/modules/faculty/pages/class-detail/class_detail_view.dart';
 
-import '../../../../models/models.dart';
+import '../../../../../models/models.dart';
 
 class FacultyClassTile extends StatelessWidget {
   const FacultyClassTile({
