@@ -24,6 +24,7 @@ class FacultyHomeView extends StatelessWidget {
                 'Your Classes',
               ),
               pinned: true,
+              automaticallyImplyLeading: false,
             ),
             GetBuilder<HomeViewController>(
               id: 'home-view',

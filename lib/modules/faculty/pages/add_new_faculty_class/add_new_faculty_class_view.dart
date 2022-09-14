@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:prezent/models/dummy_data.dart';
 import 'package:prezent/modules/faculty/controllers/faculty_controller.dart';
 import 'package:prezent/modules/faculty/controllers/home_view_controller.dart';
-import 'package:prezent/modules/faculty/pages/add_new_faculty_class/widgets/form_input_field.dart';
+import 'package:prezent/modules/common_widgets/form_input_field.dart';
 
 class AddNewFacultyClassView extends StatelessWidget {
   AddNewFacultyClassView({
@@ -45,14 +45,14 @@ class AddNewFacultyClassView extends StatelessWidget {
                       child: Column(
                         children: [
                           InputSearchableDropDownField(
-                            classIdController:
+                            controller:
                                 facultyController.classIdController,
                             label: 'Class Id',
                             hint: 'format:- "branch-section"',
                             items: dummyClassId,
                           ),
                           InputSearchableDropDownField(
-                            classIdController:
+                            controller:
                                 facultyController.subjectCodeController,
                             hint: 'Enter the Subject Code',
                             label: 'Subject Code',

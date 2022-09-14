@@ -155,34 +155,33 @@ class FormInputField extends StatelessWidget {
   }
 }
 
-
 class InputSearchableDropDownField extends StatelessWidget {
   const InputSearchableDropDownField({
     Key? key,
-    required this.classIdController,
+    required this.controller,
     required this.items,
     required this.label,
-    required this.hint,
+    required this.hint, this.showSearchBox=true,
   }) : super(key: key);
 
-  final TextEditingController classIdController;
+  final TextEditingController controller;
   final List<String> items;
   final String label;
   final String hint;
+  final bool showSearchBox;
 
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<String>(
-      popupProps: const PopupProps.menu(
-        // constraints: BoxConstraints(maxHeight: double.infinity - 400),
-        scrollbarProps: ScrollbarProps(),
-        showSearchBox: true,
-        searchFieldProps: TextFieldProps(autofocus: true),
-        searchDelay: Duration(),
+      popupProps:  PopupProps.menu(
+        scrollbarProps: const ScrollbarProps(),
+        showSearchBox: showSearchBox,
+        searchFieldProps: const TextFieldProps(autofocus: true),
+        searchDelay: const Duration(),
       ),
       items: items,
       autoValidateMode: AutovalidateMode.onUserInteraction,
-      onChanged: (value) => classIdController.text = value!,
+      onChanged: (value) => controller.text = value!,
       validator: (value) {
         if ((value == null || value.isEmpty)) {
           return '$label can\'t be empty';
