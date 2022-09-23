@@ -23,8 +23,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
-      theme: AppTheme().lightThemeData,
+      theme: AppTheme().themeData,
       home: const FirstView(),
+      debugShowCheckedModeBanner: false,
       // initialBinding: GlobalBindings(),
     );
   }
@@ -40,29 +41,42 @@ class FirstView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            userChip('Student',()=>Get.to( const StudentHomeView()),),
+            userChip(
+              'Student',
+              () => Get.to(const StudentHomeView()),
+            ),
             const SizedBox(
               height: 16,
             ),
-            userChip('Faculty',() => Get.to(() => const FacultyHomeView()),),
+            userChip(
+              'Faculty',
+              () => Get.to(() => const FacultyHomeView()),
+            ),
             const SizedBox(
               height: 16,
             ),
-            userChip('Admin',() => Get.to(() => const AdminHomeView())),
+            userChip('Admin', () => Get.to(() => const AdminHomeView())),
+            const SizedBox(
+              height: 16,
+            ),
+            userChip(
+              'Create new User',
+              () => Get.to(() => const CreateNewUserForm()),
+            ),
           ],
         ),
       ),
     );
   }
 
-  ActionChip userChip(String user,void Function() onTap) {
+  ActionChip userChip(String user, void Function() onTap) {
     return ActionChip(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       label: Text(
-        'I am $user',
-        style: Get.textTheme.displayMedium,
+        user,
+        style: Get.textTheme.titleLarge,
       ),
-      onPressed:onTap,
+      onPressed: onTap,
     );
   }
 }

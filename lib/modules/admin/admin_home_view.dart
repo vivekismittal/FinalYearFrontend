@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
+import 'package:prezent/modules/admin/pages/classes_view.dart';
+import 'package:prezent/modules/admin/pages/course_branch_view.dart';
 import 'package:prezent/modules/forms/create_class.dart';
 import 'package:prezent/modules/forms/create_new_user.dart';
-
-import '../student/pages/home_view/home_view.dart';
 
 class AdminHomeView extends StatelessWidget {
   const AdminHomeView({super.key});
@@ -17,30 +16,34 @@ class AdminHomeView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             userChip(
-              'Create Class',
-              () => Get.to(const CreateClass()),
+              'All Branches',
+              () => Get.to(() =>  CourseBranchView(isBranch: true,)),
             ),
             const SizedBox(
               height: 16,
             ),
             userChip(
-              'Create new User',
-              () => Get.to(() => const CreateNewUserForm()),
+              'All Courses',
+              () => Get.to(() =>  CourseBranchView(isBranch: false,)),
+            ), const SizedBox(
+              height: 16,
             ),
-            
+            userChip(
+              'All Classes',
+              () => Get.to(() =>  ClassesView()),
+            ),
           ],
         ),
       ),
     );
   }
 
-
   ActionChip userChip(String user, void Function() onTap) {
     return ActionChip(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       label: Text(
-        'I am $user',
-        style: Get.textTheme.displayMedium,
+        user,
+        style: Get.textTheme.titleLarge,
       ),
       onPressed: onTap,
     );

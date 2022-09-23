@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prezent/models/user_model.dart';
+import 'package:prezent/models_2.dart/user_model.dart';
 import 'package:prezent/modules/common_widgets/form_input_field.dart';
 import 'package:prezent/requests/user_request.dart';
 

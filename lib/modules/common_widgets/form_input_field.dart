@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:prezent/data/class_data.dart';
 import 'package:prezent/models/dummy_data.dart';
+import 'package:prezent/models_2.dart/course_branch.dart';
 
 class FormInputField extends StatelessWidget {
   const FormInputField({
@@ -40,10 +42,6 @@ class FormInputField extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: Get.textTheme.bodySmall,
-            ),
             trailingWidget ?? const SizedBox(),
           ],
         ),
@@ -56,36 +54,55 @@ class FormInputField extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             validator: (value) {
-              log('value: $value');
+              print('value: $value  ');
+
+              if ((value == null || value.isEmpty)) {
+                return 'Required Field';
+              }
               if (label == 'Class Id') {
                 if (dummyClasses
                     .where((element) => element.classId == value)
                     .isEmpty) {
                   return 'Class Id not Found';
                 }
-                return null;
               }
-              //   if ((value == null || value.isEmpty)) {
-              //     return '$label can\'t be empty';
-              //   }
-              //   if (label == 'Username') {
-              //     if (value.length < 8) {
-              //       return 'Username should be atleast length of 8';
-              //     }
-              //     if (value.length > 30) {
-              //       return 'Username should be atmost length of 30';
-              //     }
-              //     if (!AppValues.userValidationRegEx.hasMatch(value)) {
-              //       if (RegExp(r"^[_0-9]").hasMatch(value)) {
-              //         return 'Username must begin with alphabets';
-              //       } else {
-              //         return 'Valid only alphabets,numbers and underscore';
-              //       }
-              //     }
-              //   }
+              if (label == 'Add Branch') {
+                print(label);
 
-              //   return null;
+                for (var element in allBranches) {
+                  if (element.branch == value) {
+                    return 'Branch Already Added';
+                  }
+                }
+              }
+              if (label == 'Add Course') {
+                print(label);
+
+                for (var element in allCourses) {
+                  if (element.course == value) {
+                    return 'Course Already Added';
+                  }
+                }
+              }
+              
+              return null;
             },
+            // if (label == 'Username') {
+            //   if (value.length < 8) {
+            //     return 'Username should be atleast length of 8';
+            //   }
+            //   if (value.length > 30) {
+            //     return 'Username should be atmost length of 30';
+            //   }
+            //   if (!AppValues.userValidationRegEx.hasMatch(value)) {
+            //     if (RegExp(r"^[_0-9]").hasMatch(value)) {
+            //       return 'Username must begin with alphabets';
+            //     } else {
+            //       return 'Valid only alphabets,numbers and underscore';
+            //     }
+            //   }
+            // }
+
             cursorColor: colorScheme.onSurface,
             cursorHeight: 24,
             autofocus: false,
@@ -98,43 +115,8 @@ class FormInputField extends StatelessWidget {
             onChanged: onChanged,
             maxLength: 56,
             decoration: InputDecoration(
-              fillColor: colorScheme.surfaceVariant,
-              counter: const SizedBox(),
+              label: Text(label),
               hintText: hintText,
-              // hintStyle: formFieldLabelTextStyle.copyWith(
-              //   fontSize: 14,
-              //   color: AppColors.grey6C,
-              // ),
-              // errorStyle: formFieldLabelTextStyle.copyWith(
-              //   fontSize: 10,
-              //   color: AppColors.gRed,
-              // ),
-              // isDense: true,
-              errorBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1.5,
-                  color: colorScheme.primary,
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1.5,
-                  color: colorScheme.primary,
-                ),
-              ),
-              disabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: colorScheme.outline,
-                ),
-              ),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  width: 1,
-                  color: colorScheme.outline,
-                ),
-              ),
-              focusColor: colorScheme.primary,
               prefixIcon: prefixWidget,
               prefixIconColor: colorScheme.onSurface,
               prefixIconConstraints: const BoxConstraints(
@@ -161,7 +143,8 @@ class InputSearchableDropDownField extends StatelessWidget {
     required this.controller,
     required this.items,
     required this.label,
-    required this.hint, this.showSearchBox=true,
+    required this.hint,
+    this.showSearchBox = true,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -173,7 +156,7 @@ class InputSearchableDropDownField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<String>(
-      popupProps:  PopupProps.menu(
+      popupProps: PopupProps.menu(
         scrollbarProps: const ScrollbarProps(),
         showSearchBox: showSearchBox,
         searchFieldProps: const TextFieldProps(autofocus: true),
