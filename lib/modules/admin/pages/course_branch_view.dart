@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:prezent/controllers/class_controller.dart';
 import 'package:prezent/data/class_data.dart';
+import 'package:prezent/modules/common_widgets/default_loader.dart';
 
 import '../../common_widgets/form_input_field.dart';
-import '../widgets/view_tile.dart';
+import '../../common_widgets/view_tile.dart';
 
-class CourseBranchView extends StatelessWidget {
-  CourseBranchView({super.key, required this.isBranch});
+class CourseOrBranchView extends StatelessWidget {
+  const CourseOrBranchView({super.key, required this.isBranch});
 
   final bool isBranch;
-  ColorScheme colorScheme = Get.theme.colorScheme;
-  ClassController controller = Get.put(ClassController());
-  bool onEdit = false;
-
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = Get.theme.colorScheme;
+    ClassController controller = Get.put(ClassController());
+    bool onEdit = false;
+
     if ((isBranch ? isBranchFetched : isCourseFetched) == false) {
       controller.lastFn =
           isBranch ? controller.getBranches : controller.getCourses;
       isBranch ? controller.getBranches() : controller.getCourses();
     }
+
     return SafeArea(
       child: Scaffold(
         body: GetBuilder<ClassController>(
@@ -64,45 +65,40 @@ class CourseBranchView extends StatelessWidget {
                   delegate: SliverChildListDelegate(
                     [
                       Obx(
-                        () => Column(
-                          children: controller.isCourseBranchFetching.isFalse
-                              ? List.generate(
-                                  isBranch
-                                      ? allBranches.length
-                                      : allCourses.length,
-                                  (index) => ViewTile(
-                                    text: isBranch
-                                        ? allBranches[index].branch
-                                        : allCourses[index].course,
-                                    onEdit: onEdit,
-                                    onRemove: () => isBranch
-                                        ? controller.removeBranch(index)
-                                        : controller.removeCourse(index),
-                                  ),
-                                )
-                              : [
-                                  LottieBuilder.asset(
-                                    'lottieFiles/pixel-loader.json',
-                                    height: 300,
-                                    frameRate: FrameRate.max,
-                                    animate:
-                                        controller.isCourseBranchFailed.isFalse,
-                                  ),
-                                  Visibility(
-                                    visible:
-                                        controller.isCourseBranchFailed.isTrue,
+                        () => (isBranch
+                                ? controller.isBranchFetching.isFalse
+                                : controller.isCourseFetching.isFalse)
+                            ? Column(
+                                children: List.generate(
+                                isBranch
+                                    ? allBranches.length
+                                    : allCourses.length,
+                                (index) => ViewTile(
+                                  title: isBranch
+                                      ? Text(allBranches[index].branch)
+                                      : Text(allCourses[index].course),
+                                  action: Visibility(
+                                    visible: onEdit,
                                     child: IconButton(
-                                      onPressed: controller.lastFn,
+                                      padding: const EdgeInsets.all(0),
                                       icon: Icon(
-                                        Icons.replay_circle_filled_outlined,
+                                        Icons.delete_outline_rounded,
                                         color: colorScheme.error,
-                                        semanticLabel: 'Retry',
-                                        size: 30,
                                       ),
+                                      onPressed: () => isBranch
+                                          ? controller.removeBranch(index)
+                                          : controller.removeCourse(index),
                                     ),
-                                  )
-                                ],
-                        ),
+                                  ),
+                                ),
+                              ))
+                            : DefaultLoader(
+                                isLoad: (isBranch
+                                        ? controller.isBranchFailed
+                                        : controller.isCourseFailed)
+                                    .isFalse,
+                                retryFn: controller.lastFn,
+                              ),
                       ),
                       Visibility(
                         visible: onEdit,
@@ -122,6 +118,7 @@ class CourseBranchView extends StatelessWidget {
                                       ? controller.newBranch
                                       : controller.newCourse,
                                   label: isBranch ? 'Add Branch' : 'Add Course',
+                                  autoFocus: true,
                                 ),
                                 const SizedBox(
                                   height: 10,

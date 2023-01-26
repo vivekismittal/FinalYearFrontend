@@ -56,18 +56,18 @@ class AppTheme {
             return colorScheme.onTertiary;
           }
           if (states.contains(MaterialState.hovered)) {
-            return colorScheme.onSecondary;
+            return colorScheme.onSecondaryContainer;
           }
-          return colorScheme.onSecondaryContainer;
+          return colorScheme.onSecondary;
         }),
         backgroundColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.pressed)) {
             return colorScheme.tertiaryContainer;
           }
           if (states.contains(MaterialState.hovered)) {
-            return colorScheme.secondary;
+            return colorScheme.secondaryContainer;
           }
-          return colorScheme.secondaryContainer;
+          return colorScheme.secondary;
         }),
       ),
     );
@@ -87,7 +87,7 @@ class AppTheme {
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(
           width: 1.5,
-          color: colorScheme.primary,
+          color: colorScheme.error,
         ),
       ),
       focusedBorder: OutlineInputBorder(
@@ -105,7 +105,7 @@ class AppTheme {
       border: OutlineInputBorder(
         borderSide: BorderSide(
           width: 1,
-          color: colorScheme.outline,
+          color: colorScheme.secondary,
         ),
       ),
       focusColor: colorScheme.primary,

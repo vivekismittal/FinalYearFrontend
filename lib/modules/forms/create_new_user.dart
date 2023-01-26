@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prezent/models_2.dart/user_model.dart';
 import 'package:prezent/modules/common_widgets/form_input_field.dart';
 import 'package:prezent/requests/user_request.dart';
+
+import '../../controllers/user_controller.dart';
 
 class CreateNewUserForm extends StatelessWidget {
   const CreateNewUserForm({super.key});
@@ -22,7 +23,7 @@ class CreateNewUserForm extends StatelessWidget {
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
-              title: const Text('Add New User'),
+              title: const Text('Enter Details'),
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_new_outlined,
@@ -98,34 +99,5 @@ class CreateNewUserForm extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class UserController {
-  final TextEditingController name = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController mobile = TextEditingController();
-  TextEditingController role = TextEditingController();
-  RxBool isUserCreationPending = false.obs;
-
-  void createNewUser(GlobalKey<FormState> formKey) async {
-    if (formKey.currentState!.validate()) {
-      isUserCreationPending(true);
-      User newUser = User(
-        name: name.text,
-        email: email.text,
-        mobile: int.parse(mobile.text),
-        role: role.text,
-      );
-      bool isPosted = await UserRequest().postNewUser(newUser);
-      Future.delayed(const Duration(seconds: 5), () {
-        isUserCreationPending(false);
-        if (isPosted) {
-          formKey.currentState!.reset();
-        } else {
-          print('Validation ERROR');
-        }
-      });
-    }
   }
 }

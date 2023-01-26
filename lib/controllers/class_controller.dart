@@ -1,26 +1,35 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezent/data/class_data.dart';
+import 'package:prezent/models_2.dart/class_subject.dart';
 import 'package:prezent/models_2.dart/course_branch.dart';
 import 'package:prezent/requests/class_request.dart';
 
 class ClassController extends GetxController {
   ClassRequest classRequest = ClassRequest();
 
-  RxBool isCourseBranchFetching = false.obs;
-  RxBool isClassFetching = false.obs;
-  RxBool isCourseBranchFailed = false.obs;
-  RxBool isClassFailed = false.obs;
+  RxBool isBranchFetching = false.obs;
+  RxBool isCourseFetching = false.obs;
+
+  RxBool isCourseFailed = false.obs;
+  RxBool isBranchFailed = false.obs;
+
   final courseBranchFormKey = GlobalKey<FormState>(debugLabel: 'Course-Branch');
-  final classFormKey = GlobalKey<FormState>(debugLabel: 'All-CLasses');
+  late void Function() lastFn;
 
   void updateCourseBranchView() {
     update(['Course-Branch-View']);
     courseBranchFormKey.currentState?.reset();
   }
 
-  late void Function() lastFn;
+  void updateClassSubjectView() {
+    update(['All-Class-Subject-View']);
+    classFormKey.currentState?.reset();
+  }
+
   TextEditingController newCourse = TextEditingController();
   TextEditingController newBranch = TextEditingController();
 
@@ -43,31 +52,30 @@ class ClassController extends GetxController {
   }
 
   void updateCourse() async {
-    isCourseBranchFetching(true);
-    isCourseBranchFailed(false);
+    isCourseFetching(true);
+    isCourseFailed(false);
     bool isCourseSaved = await classRequest.postCourses(allCourses);
     if (isCourseSaved) {
-      isCourseBranchFetching(false);
+      isCourseFetching(false);
     } else {
-      isCourseBranchFailed(true);
+      isCourseFailed(true);
       print('ERROR SAVING COURSES');
     }
   }
 
   void getCourses() async {
-    isCourseBranchFetching(true);
-    isCourseBranchFailed(false);
+    isCourseFetching(true);
+    isCourseFailed(false);
     bool isFetchedCourses = await classRequest.fetchAllCourses();
     if (isFetchedCourses) {
-      isCourseBranchFetching(false);
+      isCourseFetching(false);
       isCourseFetched = true;
     } else {
-      isCourseBranchFailed(true);
+      isCourseFailed(true);
     }
   }
 
   //BRANCH
-
   void addNewBranch() {
     if (courseBranchFormKey.currentState!.validate()) {
       allBranches.add(
@@ -85,29 +93,50 @@ class ClassController extends GetxController {
   }
 
   void updateBranch() async {
-    isCourseBranchFetching(true);
-    isCourseBranchFailed(false);
+    isBranchFetching(true);
+    isBranchFailed(false);
     bool isBranchSaved = await classRequest.postBranches(allBranches);
     print(isBranchSaved);
     if (isBranchSaved) {
-      isCourseBranchFetching(false);
+      isBranchFetching(false);
     } else {
-      isCourseBranchFailed(true);
+      isBranchFailed(true);
       print('ERROR SAVING BRANCHES');
     }
   }
 
   void getBranches() async {
-    isCourseBranchFetching(true);
-    isCourseBranchFailed(false);
+    isBranchFetching(true);
+    isBranchFailed(false);
     bool isFetchedBranches = await classRequest.fetchAllBranches();
     print(isFetchedBranches);
     if (isFetchedBranches) {
-      isCourseBranchFetching(false);
+      isBranchFetching(false);
       isBranchFetched = true;
     } else {
-      isCourseBranchFailed(true);
+      isBranchFailed(true);
     }
+  }
+
+//////CLASSES//////////
+  RxBool isClassFetching = false.obs;
+  RxBool isClassFailed = false.obs;
+  RxBool isClassPosting = false.obs;
+  RxBool isClassPostingFailed = false.obs;
+
+  final classFormKey = GlobalKey<FormState>(debugLabel: 'All-CLasses');
+  late TextEditingController courseInput;
+  late TextEditingController branchInput;
+  late TextEditingController sectionInput;
+  late TextEditingController passingYearInput;
+
+  void initNewClassForm() {
+    courseInput = TextEditingController();
+    branchInput = TextEditingController();
+    sectionInput = TextEditingController();
+    passingYearInput = TextEditingController();
+    isClassPosting(false);
+    isClassPostingFailed(false);
   }
 
   void getClasses() async {
@@ -120,6 +149,90 @@ class ClassController extends GetxController {
       isClassFetched = true;
     } else {
       isClassFailed(true);
+    }
+  }
+
+  List<String> get getClassIds {
+    List<String> list = [];
+    for (var class_ in allClasses) {
+      list.add(class_.classId);
+    }
+    list.sort();
+    return list;
+  }
+
+  void saveClass() async {
+    isClassPosting(true);
+    String newClassId =
+        '${courseInput.text}-${passingYearInput.text}-${branchInput.text}-${sectionInput.text}';
+    Class newClass = Class(
+      branch: branchInput.text,
+      course: courseInput.text,
+      section: int.parse(sectionInput.text),
+      passingYear: int.parse(passingYearInput.text),
+      classId: newClassId,
+    );
+    bool isPostedClass = await classRequest.postClass(newClass);
+    if (isPostedClass) {
+      isClassPosting(false);
+      Get.back();
+      updateClassSubjectView();
+    } else {
+      log('ERROR SAVING Classes');
+      isClassPostingFailed(true);
+    }
+  }
+
+  //////SUBJECTS//////////
+  RxBool isSubjectFetching = false.obs;
+  RxBool isSubjectFetchingFailed = false.obs;
+  RxBool isSubjectPosting = false.obs;
+  RxBool isSubjectPostingFailed = false.obs;
+
+  final subjectFormKey = GlobalKey<FormState>(debugLabel: 'All-SUBJECTS');
+  late TextEditingController subjectNameInput;
+  late TextEditingController subjectCodeInput;
+
+  void initNewSubjectForm() {
+    subjectNameInput = TextEditingController();
+    subjectCodeInput = TextEditingController();
+    isSubjectPosting(false);
+    isSubjectPostingFailed(false);
+  }
+
+  void getSubjects() async {
+    isSubjectFetching(true);
+    isSubjectFetchingFailed(false);
+    bool isFetchedSubjects = await classRequest.fetchAllSubjects();
+    print(isFetchedSubjects);
+    if (isFetchedSubjects) {
+      isSubjectFetching(false);
+    } else {
+      isSubjectFetchingFailed(true);
+    }
+  }
+
+List<String> get getsubjectCodes {
+    List<String> list = [];
+    for (var subject in allSubjects) {
+      list.add(subject.subjectCode);
+    }
+    list.sort();
+    return list;
+  }
+
+  void saveSubject() async {
+    isSubjectPosting(true);
+    Subject newSubject = Subject(
+        subjectName: subjectNameInput.text, subjectCode: subjectCodeInput.text);
+    bool isPostedSubject = await classRequest.postSubject(newSubject);
+    if (isPostedSubject) {
+      isSubjectPosting(false);
+      Get.back();
+      updateClassSubjectView();
+    } else {
+      log('ERROR SAVING SUBJECT');
+      isSubjectPostingFailed(true);
     }
   }
 }

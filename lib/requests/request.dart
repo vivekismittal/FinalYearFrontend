@@ -4,13 +4,14 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 class AppRequest {
-  Future<dynamic> getRequest(String uri) async {
+  Future<dynamic> getRequest(Uri uri,Map<String, String> headers) async {
     try {
       log('GET $uri');
-      var response = await http.get(Uri.parse(uri));
+      var response = await http.get(uri,headers:headers );
       if (response.statusCode == 200) {
+        log(response.body);
+
         var resBody = jsonDecode(response.body);
-        log('$resBody');
         return resBody;
       }
       log('ERROR for the $uri');
@@ -21,13 +22,15 @@ class AppRequest {
     }
   }
 
-  Future<dynamic> postRequest(String uri, Map<String, dynamic> body) async {
+  Future<dynamic> postRequest(Uri uri, Map<String, dynamic> body,String email) async {
     try {
       var jsonBody = jsonEncode(body);
       var response = await http.post(
-        Uri.parse(uri),
-        headers: <String, String>{
+       uri,
+        headers:
+         <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'email':email,
         },
         body: jsonBody,
       );
@@ -41,8 +44,7 @@ class AppRequest {
 
       return null;
     } catch (e) {
-      log('$e');
-      return null;
+      throw Exception(e);
     }
   }
 }

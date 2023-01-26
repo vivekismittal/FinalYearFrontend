@@ -1,18 +1,32 @@
 class Student {
-  final String name;
   final String email;
-  final String rollNo;
-  final String studentNo;
+  final int rollNo;
+  final int studentNo;
   final String classId;
-  final List<String> subjects;
+   List<String> subjectsCode;
 
   Student({
-    required this.name,
     required this.email,
     required this.rollNo,
     required this.studentNo,
     required this.classId,
-     this.subjects=const[],
+    this.subjectsCode = const [],
   });
-  
+
+  Student.fromJson(Map<String, dynamic> json)
+      : email = json['email'] as String,
+        rollNo = json['rollNo'] as int,
+        studentNo = json['studentNo'] as int,
+        classId = json['classId'] as String,
+        subjectsCode = (json['subjectsCode'] != null)
+            ? (json['subjectsCode'] as List).map((e) => e as String).toList()
+            : [];
+
+  Map<String, dynamic> toJson() => {
+       
+        'email': email,
+        'rollNo': rollNo,
+        'studentNo': studentNo,
+        'classId': classId,
+      };
 }

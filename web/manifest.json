@@ -1,11 +1,11 @@
 {
     "name": "prezent",
     "short_name": "prezent",
-    "start_url": ".",
+    "start_url": "prezent.com",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A attendance application.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
